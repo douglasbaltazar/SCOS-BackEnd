@@ -45,6 +45,12 @@ public class TecnicoController {
 		return this.tecnicoRepository.save(tecnico);
 	}
 	
+	//
+	@GetMapping("/tecnicos/disponiveis")
+	public List<Tecnico> getTecnicosDisponiveis() {
+		return this.tecnicoRepository.findTecnicosDisponiveis();
+	}
+	
 	// Atualizar Tecnico
 	@PutMapping("tecnicos/{id}")
 	public ResponseEntity<Tecnico> updateTecnico(@PathVariable(value = "id") Long tecnicoId,
@@ -60,6 +66,19 @@ public class TecnicoController {
 		
 	}
 	
+	// Atualizar Tecnico
+	@PutMapping("tecnicos/aumentar/{id}")
+	public ResponseEntity<Tecnico> increaseAtendimento(@PathVariable(value = "id") Long tecnicoId,
+			@Validated @RequestBody Tecnico tecnicoUpdate) throws ResourceNotFoundException {
+		Tecnico tecnico = tecnicoRepository.findById(tecnicoId)
+				.orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um Tecnico com o id : " + tecnicoId));
+		tecnico.setEmail(tecnicoUpdate.getEmail());
+		tecnico.setNome(tecnicoUpdate.getNome());
+		tecnico.setNumAtendimentos(tecnicoUpdate.getNumAtendimentos() + 1);
+		tecnico.setTelefone(tecnicoUpdate.getTelefone());		
+		return ResponseEntity.ok(this.tecnicoRepository.save(tecnico));	
+		}
+	
 	// Deletar Tecnico
 	@DeleteMapping("tecnicos/{id}")
 	public Map<String, Boolean> deleteTecnico(@PathVariable(value = "id") Long tecnicoId) throws ResourceNotFoundException {
@@ -70,5 +89,12 @@ public class TecnicoController {
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
 		return response;
+	}
+	
+	public void aumentarAtendimento(long tecnicoid) throws ResourceNotFoundException {
+		Tecnico tecnico = tecnicoRepository.findById(tecnicoid)
+				.orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um Tecnico com o id : " + tecnicoid));
+		tecnico.setNumAtendimentos(tecnico.getNumAtendimentos() + 1);
+		ResponseEntity.ok(this.tecnicoRepository.save(tecnico));
 	}
 }

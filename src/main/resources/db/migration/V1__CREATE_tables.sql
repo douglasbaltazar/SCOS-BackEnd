@@ -21,6 +21,7 @@ CREATE TABLE tbl_servicos (
 
 CREATE TABLE tbl_tecnicos (
 	id SERIAL PRIMARY KEY,
+	nome VARCHAR(150),
 	email VARCHAR(150),
 	telefone VARCHAR(30),
 	numatendimentos INTEGER

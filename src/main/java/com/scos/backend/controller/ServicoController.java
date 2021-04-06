@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.scos.backend.exception.ResourceNotFoundException;
 import com.scos.backend.model.Servico;
+import com.scos.backend.model.Tecnico;
 import com.scos.backend.repository.ServicoRepository;
+import com.scos.backend.repository.TecnicoRepository;
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -26,6 +28,7 @@ public class ServicoController {
 	
 	@Autowired
 	private ServicoRepository servicoRepository;
+
 	// getServicos
 	@GetMapping("servicos")
 	public List<Servico> getAllServico() {
@@ -51,11 +54,11 @@ public class ServicoController {
 			@Validated @RequestBody Servico servicoUpdate) throws ResourceNotFoundException {
 		Servico servico = servicoRepository.findById(servicoId)
 				.orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um Serviço com o id : " + servicoId));
-		servico.setClienteid(servicoUpdate.getClienteid());
+		servico.setCliente(servicoUpdate.getCliente());
 		servico.setDescricao(servicoUpdate.getDescricao());
 		servico.setPrioridade(servicoUpdate.getPrioridade());
 		servico.setStatus(servicoUpdate.getStatus());
-		servico.setTecnicoid(servicoUpdate.getTecnicoid());
+		servico.setTecnico(servicoUpdate.getTecnico());
 		servico.setTipo(servicoUpdate.getTipo());
 		servico.setValor(servicoUpdate.getValor());
 		servico.setId(servicoUpdate.getId());

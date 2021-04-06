@@ -2,10 +2,15 @@ package com.scos.backend.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tbl_servicos")
@@ -13,10 +18,12 @@ public class Servico {
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		private long id;
-		@Column(name = "clienteid")
-		private long clienteid;
-		@Column(name = "tecnicoid")
-		private long tecnicoid;
+		@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})  
+		@OneToOne(fetch = FetchType.LAZY, targetEntity = Cliente.class)
+		private Cliente cliente;
+		@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
+		@OneToOne(fetch = FetchType.LAZY, targetEntity = Tecnico.class)
+		private Tecnico tecnico;
 		@Column(name = "tipo")
 		private String tipo;
 		@Column(name = "status")
@@ -32,11 +39,11 @@ public class Servico {
 			super();
 		}
 		
-		public Servico(long clienteid, long tecnicoid, String tipo, String status, String prioridade, double valor,
+		public Servico(Cliente cliente, Tecnico tecnico, String tipo, String status, String prioridade, double valor,
 				String descricao) {
 			super();
-			this.clienteid = clienteid;
-			this.tecnicoid = tecnicoid;
+			this.cliente = cliente;
+			this.tecnico = tecnico;
 			this.tipo = tipo;
 			this.status = status;
 			this.prioridade = prioridade;
@@ -49,17 +56,17 @@ public class Servico {
 		public void setId(long id) {
 			this.id = id;
 		}
-		public long getClienteid() {
-			return clienteid;
+		public Cliente getCliente() {
+			return cliente;
 		}
-		public void setClienteid(long clienteid) {
-			this.clienteid = clienteid;
+		public void setCliente(Cliente cliente) {
+			this.cliente = cliente;
 		}
-		public long getTecnicoid() {
-			return tecnicoid;
+		public Tecnico getTecnico() {
+			return tecnico;
 		}
-		public void setTecnicoid(long tecnicoid) {
-			this.tecnicoid = tecnicoid;
+		public void setTecnico(Tecnico tecnico) {
+			this.tecnico = tecnico;
 		}
 		public String getTipo() {
 			return tipo;
